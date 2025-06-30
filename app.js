@@ -10,7 +10,12 @@ const app = express();
 const port = process.env.PORT;
 
 // ✅ Middlewares
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: 'https://evangadi-forum-frontend-f4hm8u1r6-bewket40s-projects.vercel.app', // frontend URL
+  credentials: true
+
+}));
 
 // Middleware to parse JSON
 app.use(express.json());
