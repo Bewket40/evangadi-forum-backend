@@ -5,7 +5,7 @@ import { register, login, checkUser } from "../controller/userController.js";
 const router = express.Router();
 
 //register route
-router.post("/register", register);  //http://localhost:3002/api/auth/register
+router.post("/register", register);  //http://localhost:5000/api/auth/register
 
 //login user
 router.post("/login", login);
