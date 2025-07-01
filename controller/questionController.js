@@ -179,6 +179,7 @@ export const getSingleQuestion = async (req, res) => {
 
 
 
+
 // import { StatusCodes } from "http-status-codes";
 // import pool from "../config/databaseConfig.js"; // DB connection
 
@@ -366,3 +367,177 @@ export const getSingleQuestion = async (req, res) => {
 //     });
 //   }
 // };
+
+// import { StatusCodes } from "http-status-codes";
+// import pool from "../config/databaseConfig.js"; // PostgreSQL pool
+
+// // ✅ 1. Post a new question
+// export async function askquestion(req, res) {
+//   const { title, question, description, tag } = req.body;
+//   const userId = req.user.user_id;
+
+//   if (!title || !question || !description) {
+//     return res.status(StatusCodes.BAD_REQUEST).json({
+//       success: false,
+//       error: "Title, Question, and Description are required.",
+//     });
+//   }
+
+//   try {
+//     const query = `
+//       INSERT INTO questions (user_id, title, question, description, tag)
+//       VALUES ($1, $2, $3, $4, $5)
+//       RETURNING question_id;
+//     `;
+//     const values = [userId, title, question, description, tag || null];
+
+//     const result = await pool.query(query, values);
+
+//     res.status(StatusCodes.CREATED).json({
+//       success: true,
+//       question_id: result.rows[0].question_id,
+//       msg: "Question posted successfully!",
+//     });
+//   } catch (error) {
+//     console.error("Insert error:", error.message);
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//       error: "Failed to post question. Please try again later.",
+//     });
+//   }
+// }
+
+// // ✅ 2. Edit a question
+// export async function editQuestion(req, res) {
+//   const { question_id } = req.params;
+//   const { title, question, description, tag } = req.body;
+
+//   if (!title || !question || !description) {
+//     return res.status(StatusCodes.BAD_REQUEST).json({
+//       error: "Title, Question, and Description are required.",
+//     });
+//   }
+
+//   try {
+//     const query = `
+//       UPDATE questions 
+//       SET title = $1, question = $2, description = $3, tag = $4, time = NOW()
+//       WHERE question_id = $5
+//     `;
+//     const values = [title, question, description, tag || null, question_id];
+
+//     const result = await pool.query(query, values);
+
+//     if (result.rowCount === 0) {
+//       return res.status(StatusCodes.NOT_FOUND).json({
+//         error: `No question found with ID ${question_id}`,
+//       });
+//     }
+
+//     res.status(StatusCodes.OK).json({ msg: "Question updated successfully." });
+//   } catch (err) {
+//     console.error("Edit error:", err.message);
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//       error: "Failed to update question.",
+//     });
+//   }
+// }
+
+// // ✅ 3. Delete a question
+// export async function deleteQuestion(req, res) {
+//   const { question_id } = req.params;
+
+//   try {
+//     const result = await pool.query(
+//       `DELETE FROM questions WHERE question_id = $1`,
+//       [question_id]
+//     );
+
+//     if (result.rowCount === 0) {
+//       return res.status(StatusCodes.NOT_FOUND).json({
+//         error: `No question found with ID ${question_id}`,
+//       });
+//     }
+
+//     res.json({ msg: "Question deleted successfully." });
+//   } catch (err) {
+//     console.error("Delete error:", err.message);
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//       error: "Failed to delete question.",
+//     });
+//   }
+// }
+
+// // ✅ 4. Get all recent questions
+// export async function getAllQuestions(req, res) {
+//   try {
+//     const result = await pool.query(`
+//       SELECT 
+//         q.question_id, 
+//         q.title, 
+//         q.time,
+//         q.user_id,
+//         u.username 
+//       FROM questions q
+//       JOIN users u ON q.user_id = u.user_id
+//       ORDER BY q.question_id DESC
+//       LIMIT 10;
+//     `);
+
+//     res.status(StatusCodes.OK).json({
+//       success: true,
+//       count: result.rows.length,
+//       data: result.rows,
+//     });
+//   } catch (error) {
+//     console.error("Fetch all questions error:", error.message);
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//       error: "Failed to retrieve questions.",
+//     });
+//   }
+// }
+
+// // ✅ 5. Get a single question
+// export async function getSingleQuestion(req, res) {
+//   const { question_id } = req.params;
+
+//   try {
+//     const result = await pool.query(
+//       `
+//       SELECT q.*, u.username, u.first_name, u.last_name
+//       FROM questions q
+//       JOIN users u ON q.user_id = u.user_id
+//       WHERE q.question_id = $1;
+//     `,
+//       [question_id]
+//     );
+
+//     if (result.rows.length === 0) {
+//       return res.status(StatusCodes.NOT_FOUND).json({
+//         error: "Question not found",
+//       });
+//     }
+
+//     const data = result.rows[0];
+
+//     res.status(StatusCodes.OK).json({
+//       success: true,
+//       message: "Question retrieved successfully.",
+//       question: {
+//         question_id: data.question_id,
+//         title: data.title,
+//         question: data.question,
+//         description: data.description,
+//         tag: data.tag,
+//         time: new Date(data.time).toISOString(),
+//         username: data.username,
+//         first_name: data.first_name,
+//         last_name: data.last_name,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Fetch question error:", error.message);
+//     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//       error: "Unable to retrieve question.",
+//     });
+//   }
+// }
