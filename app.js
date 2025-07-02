@@ -7,7 +7,7 @@ import answerRouter from "./Routes/answerRouter.js";
 import questionRouter from "./Routes/questionRouter.js";
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT ||5000;
 
 // ✅ Middlewares
 // app.use(cors());
